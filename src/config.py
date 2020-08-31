@@ -18,7 +18,7 @@ prefix = "apollo-"
 
 # Hard coded
 config["processing_job"] = {
-    "base-job-name": prefix + "spark-preprocessor",
+    "base_job_name": prefix + "spark-preprocessor",
     "spark_repo_uri": "381426699645.dkr.ecr.us-east-1.amazonaws.com/sagemaker-spark-example"
 }
 
