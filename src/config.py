@@ -31,7 +31,7 @@ config["file_paths"] = ['/root/sagemaker-ml-pipeline/src/ml_pipeline/abalone.csv
                         '/root/sagemaker-ml-pipeline/src/ml_pipeline/smprocpreprocess.py']
 
 config["train_model"] = {
-    "sagemaker_role": "AirflowSageMakerExecutionRole",
+    "sagemaker_role": "AirflowSageMakerExecutionRole-airflow-sm-cof-stack",
     "estimator_config": {
         "train_instance_count": 1,
         "train_instance_type": "ml.m4.xlarge",
