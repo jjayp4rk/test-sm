@@ -5,12 +5,12 @@ try:
 except:
     timestamp = ""
 
-bucket = '<s3-bucket>'
+bucket = 'airflow-sm-cof-bucket'
 
 config = {}
 
 config["job_level"] = {
-    "region_name": "<region-name>",
+    "region_name": "us-east-1",
     "run_hyperparameter_opt": "no"
 }
 
@@ -19,7 +19,7 @@ prefix = "apollo-"
 # Hard coded
 config["processing_job"] = {
     "base-job-name": prefix + "spark-preprocessor",
-    "spark_repo_uri": "<accountid>.dkr.ecr.<region-name>.amazonaws.com/sagemaker-spark-example"
+    "spark_repo_uri": "381426699645.dkr.ecr.us-east-1.amazonaws.com/sagemaker-spark-example"
 }
 
 config["bucket"] = bucket
