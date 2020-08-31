@@ -14,8 +14,13 @@ config["job_level"] = {
     "run_hyperparameter_opt": "no"
 }
 
+prefix = "apollo-"
+
 # Hard coded
-config["spark_repo_uri"] = "<accountid>.dkr.ecr.<region-name>.amazonaws.com/sagemaker-spark-example"
+config["processing_job"] = {
+    "base-job-name": prefix + "spark-preprocessor",
+    "spark_repo_uri": "<accountid>.dkr.ecr.<region-name>.amazonaws.com/sagemaker-spark-example"
+}
 
 config["bucket"] = bucket
 
@@ -33,7 +38,7 @@ config["train_model"] = {
         "train_volume_size": 20,
         "train_max_run": 3600,
         "output_path": "s3://"+bucket+"/sagemaker/spark-preprocess/model/xgboost",
-        "base_job_name": "training-job-",
+        "base_job_name": prefix + "training-job-",
         "hyperparameters": {
             "objective": "reg:linear",
             "eta": ".2",
@@ -46,11 +51,13 @@ config["train_model"] = {
     },
     "inputs": {
         "train": "s3://"+bucket+"/sagemaker/spark-preprocess/inputs/preprocessed/abalone/"+timestamp+"/train/part-00000",
-        "validation": "s3://"+bucket+"/sagemaker/spark-preprocess/inputs/preprocessed/abalone/"+timestamp+"/validation/part-00000"  
+        "validation": "s3://"+bucket+"/sagemaker/spark-preprocess/inputs/preprocessed/abalone/"+timestamp+"/validation/part-00000"
     }
 }
 
 config["inference_pipeline"] = {
+    "pipeline_model_name": prefix + 'inference-pipeline-spark-xgboost-' + timestamp,
+    "endpoint_name": prefix + 'inference-pipeline-endpoint-' + timestamp,
     "inputs": {
         "spark_model": "s3://"+bucket+"/sagemaker/spark-preprocess/model/spark/"+timestamp+"/model.tar.gz"
     }
@@ -63,12 +70,14 @@ config["batch_transform"] = {
         "output_path": "s3://" + bucket + "/sagemaker/spark-preprocess/batch_output/xgb-transform/" + timestamp
     },
     "transform_config": {
-        "data": "s3://"+bucket+"/sagemaker/spark-preprocess/inputs/raw/abalone/abalone.csv", #for simplicity, we use training dataset
+        # for simplicity, we use training dataset
+        "data": "s3://"+bucket+"/sagemaker/spark-preprocess/inputs/raw/abalone/abalone.csv",
         "data_type": "S3Prefix",
         "content_type": "text/csv",
         "split_type": "Line",
-        "input_filter": "$[:-1]", #we are removing the 1st column of the data (label) for inference purposes.
-        "job_name": "xgb-transform-job-"+timestamp
+        # we are removing the 1st column of the data (label) for inference purposes.
+        "input_filter": "$[:-1]",
+        "job_name": "xgb-transform-job-" + timestamp
     },
-    "model_name": "inference-pipeline-spark-xgboost-"+timestamp
+    "model_name": prefix + "inference-pipeline-spark-xgboost-" + timestamp
 }
